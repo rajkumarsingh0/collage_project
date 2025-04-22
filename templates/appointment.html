@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .appointment-form {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .appointment-form h2 {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .appointment-form .form-control {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .appointment-form .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+        .appointment-form .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .appointment-form .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Health App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
+    <!-- Appointment Form Section -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="appointment-form">
+                    <h2>Book a Doctor Appointment</h2>
+                    <form action="/book-appointment" method="POST">
+                        <!-- Disease/Symptom Selection -->
+                        <div class="mb-3">
+                            <label for="symptoms" class="form-label">What's your health concern?</label>
+                            <select class="form-control" id="symptoms" name="symptoms" required>
+                                <option value="" disabled selected>Select your symptom or disease</option>
+                                <option value="heart">Heart-related issues</option>
+                                <option value="skin">Skin problems</option>
+                                <option value="child">Child health</option>
+                                <option value="bone">Bone/Joint pain</option>
+                                <option value="eye">Eye problems</option>
+                                <option value="general">General checkup</option>
+                            </select>
+                        </div>
+
+                        <!-- Doctor Selection (Dynamic based on specialization) -->
+                        <div class="mb-3">
+                            <label for="doctor" class="form-label">Select Doctor</label>
+                            <select class="form-control" id="doctor" name="doctor" required disabled>
+                                <option value="" disabled selected>First select your health concern</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- Appointment Type -->
+                        <div class="mb-3">
+                            <label class="form-label">Appointment Type</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="appointment_type" id="in_person" value="in_person" required>
+                                    <label class="form-check-label" for="in_person">In-Person</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="appointment_type" id="video_call" value="video_call" required>
+                                    <label class="form-check-label" for="video_call">Video Call</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date and Time Slot -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Select Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required min="">
+                        </div>
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Select Time Slot</label>
+                            <select class="form-control" id="time" name="time" required>
+                                <option value="" disabled selected>Choose a time slot</option>
+                                <option value="09:00 AM">09:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="02:00 PM">02:00 PM</option>
+                                <option value="03:00 PM">03:00 PM</option>
+                                <option value="04:00 PM">04:00 PM</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Book Appointment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p>&copy; 2023 Health App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript for dynamic doctor selection -->
+    <script>
+        // Doctor database (can be replaced with API call in real application)
+        const doctorsBySpecialization = {
+            "heart": [
+                { name: "Dr. John Doe", specialization: "Cardiologist", experience: "15 years" },
+                { name: "Dr. Robert Smith", specialization: "Cardiac Surgeon", experience: "12 years" }
+            ],
+            "skin": [
+                { name: "Dr. Jane Smith", specialization: "Dermatologist", experience: "10 years" },
+                { name: "Dr. Emily Brown", specialization: "Cosmetic Dermatologist", experience: "8 years" }
+            ],
+            "child": [
+                { name: "Dr. Alice Johnson", specialization: "Pediatrician", experience: "14 years" },
+                { name: "Dr. Michael Wilson", specialization: "Neonatologist", experience: "9 years" }
+            ],
+            "bone": [
+                { name: "Dr. David Lee", specialization: "Orthopedic Surgeon", experience: "18 years" }
+            ],
+            "eye": [
+                { name: "Dr. Sarah Williams", specialization: "Ophthalmologist", experience: "11 years" }
+            ],
+            "general": [
+                { name: "Dr. James Taylor", specialization: "General Physician", experience: "20 years" }
+            ]
+        };
+
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+        // Dynamic doctor selection based on symptoms
+        document.getElementById('symptoms').addEventListener('change', function() {
+            const symptom = this.value;
+            const doctorSelect = document.getElementById('doctor');
+            
+            // Clear previous options
+            doctorSelect.innerHTML = '<option value="" disabled selected>Select a doctor</option>';
+            
+            if (symptom && doctorsBySpecialization[symptom]) {
+                // Enable the select
+                doctorSelect.disabled = false;
+                
+                // Add doctors for the selected specialization
+                doctorsBySpecialization[symptom].forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.name;
+                    option.textContent = `${doctor.name} (${doctor.specialization}, ${doctor.experience})`;
+                    doctorSelect.appendChild(option);
+                });
+            } else {
+                doctorSelect.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

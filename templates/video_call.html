@@ -1,0 +1,89 @@
+<!-- templates/video_call.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Video Consultation</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <video id="localVideo" autoplay muted playsinline></video>
+            <video id="remoteVideo" autoplay playsinline></video>
+            <button id="endCall" class="btn btn-danger">End Call</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.1/simplepeer.min.js"></script>
+<script>
+    const sessionId = "{{ session_id }}";
+    const currentUserId = "{{ current_user_id }}";
+    const socket = io();
+    let peer = null;
+
+    // Initialize media and connection
+    async function initCall() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: true, 
+                audio: true 
+            });
+            
+            document.getElementById('localVideo').srcObject = stream;
+            
+            socket.emit('join_room', { room: sessionId });
+            
+            socket.on('user_connected', peerId => {
+                createPeer(peerId, stream);
+            });
+
+            socket.on('signal', data => {
+                if (peer && !peer.destroyed) {
+                    peer.signal(data.signal);
+                }
+            });
+
+            socket.on('user_disconnected', () => {
+                if (peer) peer.destroy();
+            });
+
+        } catch (error) {
+            alert('Error accessing media devices: ' + error.message);
+            window.history.back();
+        }
+    }
+
+    function createPeer(peerId, stream) {
+        peer = new SimplePeer({
+            initiator: currentUserId < peerId,
+            stream: stream,
+            config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
+        });
+
+        peer.on('signal', data => {
+            socket.emit('signal', {
+                room: sessionId,
+                signal: data
+            });
+        });
+
+        peer.on('stream', remoteStream => {
+            document.getElementById('remoteVideo').srcObject = remoteStream;
+        });
+
+        peer.on('error', error => {
+            console.error('WebRTC error:', error);
+            alert('Connection error. Please try again.');
+        });
+    }
+
+    // End call handler
+    document.getElementById('endCall').addEventListener('click', () => {
+        if (peer) peer.destroy();
+        window.location.href = "/appointments";
+    });
+
+    // Initialize call when page loads
+    initCall();
+</script>
+{% endblock %}
